@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socks.library.KLog
 import idv.fan.choco.R
+import idv.fan.choco.db.AppDatabase
 import idv.fan.choco.model.MovieBean
 import idv.fan.choco.ui.base.BaseFragment
 import idv.fan.choco.ui.moviedetail.MovieDetailFragment
@@ -60,13 +61,17 @@ class MovieListFragment : BaseFragment<MovieListContract.View, MovieListContract
             }
         })
 
+        bt_refresh?.setOnClickListener {
+            presenter?.onRefreshClick()
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        rv_movie.layoutManager = layoutManager
+        rv_movie?.layoutManager = layoutManager
         if (mAdapter == null) {
             mAdapter = MovieListAdapter(this)
         }
-        rv_movie.adapter = mAdapter
+        rv_movie?.adapter = mAdapter
     }
 
     override fun setMovieList(alMovie: List<MovieBean>) {
@@ -74,8 +79,13 @@ class MovieListFragment : BaseFragment<MovieListContract.View, MovieListContract
         mAdapter?.setMovieList(alMovie)
     }
 
+    override fun setSearchViewVisibility(visibility: Int) {
+        et_search?.visibility = visibility
+        bt_search?.visibility = visibility
+    }
+
     override fun setViewStateMsgVisibility(visibility: Int) {
-        tv_state_msg?.visibility = visibility
+        ll_state_refresh?.visibility = visibility
     }
 
     override fun setRecyclerViewVisibility(visibility: Int) {

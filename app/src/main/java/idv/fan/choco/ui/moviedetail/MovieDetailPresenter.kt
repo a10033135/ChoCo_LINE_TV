@@ -5,6 +5,7 @@ import idv.fan.choco.R
 import idv.fan.choco.db.AppDatabase
 import idv.fan.choco.model.MovieBean
 import idv.fan.choco.model.MovieImgBean
+import idv.fan.choco.model.getRatingFormat
 import idv.fan.choco.ui.base.BasePresenter
 import idv.fan.choco.utils.toMovieFormat
 
@@ -47,7 +48,7 @@ class MovieDetailPresenter(dramaId: Int) : BasePresenter<MovieDetailContract.Vie
                     view?.setMovieImg(mMovieImgBean?.imgUri ?: "")
                     view?.setMovieName(mMovieBean?.name ?: "")
                     view?.setMovieCreateAt(mMovieBean?.created_at?.toMovieFormat(activity) ?: "")
-                    view?.setMovieRating(activity.getString(R.string.movie_rating_format, mMovieBean?.rating))
+                    view?.setMovieRating(mMovieBean?.getRatingFormat(activity) ?: "")
                     view?.setMovieTotalView(activity.getString(R.string.movie_view_count_format, mMovieBean?.total_views))
                 }
                 ViewState.ERROR -> {

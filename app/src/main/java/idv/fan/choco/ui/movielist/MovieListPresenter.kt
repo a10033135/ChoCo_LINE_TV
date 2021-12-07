@@ -33,12 +33,14 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
             view?.setLoadingVisibility(View.GONE)
             view?.setRecyclerViewVisibility(View.GONE)
             view?.setViewStateMsgVisibility(View.GONE)
+            view?.setSearchViewVisibility(View.GONE)
 
             when (states) {
                 ViewStates.LOADING -> {
                     view?.setLoadingVisibility(View.VISIBLE)
                 }
                 ViewStates.SUCCESS -> {
+                    view?.setSearchViewVisibility(View.VISIBLE)
                     view?.setRecyclerViewVisibility(View.VISIBLE)
                     view?.setMovieList(mMovieList)
                 }
@@ -95,5 +97,10 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
                 .compose(SwitchSchedulers.applyFlowableSchedulers())
                 .subscribe(movieSubscribe)
         }
+    }
+
+    override fun onRefreshClick() {
+        mMovieList = listOf()
+        subscribe()
     }
 }

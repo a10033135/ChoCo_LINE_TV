@@ -4,9 +4,10 @@
     <string name="msg_net_error">error, plz try later, tks!</string>
     <string name="msg_data_empty">sorry, data is empty, tks!</string>
     <string name="movie_date_format">yyyy年MM月dd日 HH點上線</string>
-    <string name="movie_rating_format">評分： %f </string>
+    <string name="movie_rating_format">評分： %s 分</string>
     <string name="movie_view_count_format">觀賞次數： %d </string>
     <string name="page_title_movie_list">MovieListFragm</string>
     <string name="page_title_movie_detail">MovieDetailFragment</string>
     <string name="btn_confirm">確定</string>
+    <string name="btn_refresh">refresh</string>
 </resources>

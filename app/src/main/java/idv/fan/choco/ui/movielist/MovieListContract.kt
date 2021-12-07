@@ -7,6 +7,7 @@ interface MovieListContract {
 
     interface View : BaseContract.View {
         fun setMovieList(alMovie: List<MovieBean>)
+        fun setSearchViewVisibility(visibility: Int)
         fun setViewStateMsgVisibility(visibility: Int)
         fun setRecyclerViewVisibility(visibility: Int)
         fun setLoadingVisibility(visibility: Int)
@@ -19,5 +20,10 @@ interface MovieListContract {
          * @param key 搜尋關鍵字
          * */
         fun onSearchConfirmClick(key: String)
+
+        /**
+         * 點選按鈕即可重新下載資料
+         * */
+        fun onRefreshClick()
     }
 }

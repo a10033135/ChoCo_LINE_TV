@@ -12,6 +12,7 @@ import com.socks.library.KLog
 import idv.fan.choco.R
 import idv.fan.choco.utils.loadUrl
 import idv.fan.choco.model.MovieBean
+import idv.fan.choco.model.getRatingFormat
 import idv.fan.choco.net.Interactorlmpl
 import idv.fan.choco.net.SwitchSchedulers
 import idv.fan.choco.utils.toMovieFormat
@@ -33,7 +34,7 @@ class MovieListAdapter(listener: MovieListListener) : RecyclerView.Adapter<Movie
         mMovieList.getOrNull(position)?.let { movieBean ->
             val context = holder.itemView.context
             holder.tvMovieName.text = movieBean.name
-            holder.tvMovieRating.text = context.getString(R.string.movie_rating_format, movieBean.rating)
+            holder.tvMovieRating.text = movieBean.getRatingFormat(context)
             holder.tvMovieCreatedAt.text = movieBean.created_at.toMovieFormat(context)
             holder.ivMovieThumb.loadUrl(R.drawable.image_placeholder)
             RxView.clicks(holder.itemView).subscribe {

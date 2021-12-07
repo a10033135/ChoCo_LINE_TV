@@ -1,18 +1,21 @@
 package idv.fan.choco.ui.movielist
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.socks.library.KLog
-import idv.fan.choco.ui.base.BaseFragment
 import idv.fan.choco.R
 import idv.fan.choco.model.MovieBean
+import idv.fan.choco.ui.base.BaseFragment
 import idv.fan.choco.ui.moviedetail.MovieDetailFragment
 import idv.fan.choco.ui.moviedetail.MovieDetailPresenter
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+
 
 class MovieListFragment : BaseFragment<MovieListContract.View, MovieListContract.Presenter>(),
     MovieListContract.View, MovieListListener {
@@ -49,6 +52,13 @@ class MovieListFragment : BaseFragment<MovieListContract.View, MovieListContract
                 else -> return@setOnEditorActionListener false
             }
         }
+        et_search?.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                presenter?.onSearchConfirmClick(et_search.text.toString())
+            }
+        })
 
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL

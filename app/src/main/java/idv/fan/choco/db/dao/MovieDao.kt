@@ -1,4 +1,4 @@
-package idv.fan.choco.db
+package idv.fan.choco.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -15,8 +15,14 @@ interface MovieDao {
     fun insert(movieList: List<MovieBean>): Array<Long>
 
     @Query("SELECT * FROM MOVIES")
-    fun getMovies(): Flowable<List<MovieBean>>
+    fun getMovies(): List<MovieBean>
 
-    @Query("SELECT name FROM MOVIES")
-    fun queryMovies(): Flowable<List<MovieBean>>
+    @Query("SELECT * FROM MOVIES WHERE name like :searchName")
+    fun searchMovieName(searchName: String): List<MovieBean>
+
+    @Query("SELECT * FROM MOVIES WHERE drama_id like :dramaId LIMIT 1")
+    fun searchMovieDramaId(dramaId: Int): MovieBean
+
+    @Query("DELETE FROM MOVIES")
+    fun cleanMovies()
 }

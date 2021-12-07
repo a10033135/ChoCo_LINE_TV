@@ -1,6 +1,5 @@
-package idv.fan.cathaybk.ui.base
+package idv.fan.choco.ui.base
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View

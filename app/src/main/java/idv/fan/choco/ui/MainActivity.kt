@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.ncapdevi.fragnav.FragNavController
 import com.socks.library.KLog
-import idv.fan.cathaybk.ui.base.BaseFragment
+import idv.fan.choco.ui.base.BaseFragment
 import idv.fan.choco.R
 import idv.fan.choco.db.AppDatabase
 import idv.fan.choco.ui.movielist.MovieListFragment
@@ -29,6 +29,16 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigationListene
         KLog.init(true)
         initFragNavController(savedInstanceState)
         initRoomDb()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyRoomDb()
+    }
+
+    private fun destroyRoomDb() {
+        AppDatabase.destroyDatabase()
     }
 
     override fun onBackPressed() {

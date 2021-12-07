@@ -1,61 +1,71 @@
 package idv.fan.choco.ui.movielist
 
+import android.view.View
 import com.socks.library.KLog
-import idv.fan.cathaybk.net.Interactorlmpl
-import idv.fan.cathaybk.net.SwitchSchedulers
-import idv.fan.cathaybk.ui.base.BasePresenter
-import idv.fan.choco.db.AppDatabase
-import idv.fan.choco.db.MovieDao
+import idv.fan.choco.R
+import idv.fan.choco.net.Interactorlmpl
+import idv.fan.choco.net.SwitchSchedulers
+import idv.fan.choco.ui.base.BasePresenter
 import idv.fan.choco.model.MovieBean
-import idv.fan.choco.net.ChocoInteraactor
+import idv.fan.choco.net.ChocoInteractor
 import idv.fan.choco.net.RxSubscriber
 
 class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListContract.Presenter {
 
     private val TAG = MovieListPresenter::class.java.simpleName
-    private var mAlMovie: List<MovieBean> = listOf()
-    private val mChocoInteractor: ChocoInteraactor by lazy { Interactorlmpl() }
+    private var mMovieList: List<MovieBean> = listOf()
+    private val mChocoInteractor: ChocoInteractor by lazy { Interactorlmpl() }
 
     override fun subscribe() {
-        if (mAlMovie.isEmpty()) {
-            getMovieListByApi()
+        KLog.i(TAG, "subscribe")
+        if (mMovieList.isEmpty()) {
+            getMovieList()
         } else {
-            setViewStatus(ViewStatus.SUCCESS)
+            setViewStatus(ViewStates.SUCCESS)
         }
     }
 
-    enum class ViewStatus { LOADING, SUCCESS, ERROR }
+    enum class ViewStates { LOADING, SUCCESS, ERROR, EMPTY }
 
-    private fun setViewStatus(status: ViewStatus) {
-        KLog.i(TAG, "setViewStatus: $status")
-        when (status) {
-            ViewStatus.LOADING -> {
-            }
-            ViewStatus.SUCCESS -> {
-            }
-            ViewStatus.ERROR -> {
-            }
-        }
-    }
-
-    override fun saveMovieList() {
-        view?.getFragmentActivity()?.let {
-            mChocoInteractor
-                .insertMovies(it, mAlMovie)
-                .compose(SwitchSchedulers.applyFlowableSchedulers())
-                .onBackpressureBuffer()
-                .subscribe {
-
-                }
-
-        }
-    }
-
-    private fun getMovieListByApi() {
+    private fun setViewStatus(states: ViewStates) {
+        KLog.i(TAG, "setViewStatus: $states")
         view?.getFragmentActivity()?.let { activity ->
+            view?.setLoadingVisibility(View.GONE)
+            view?.setRecyclerViewVisibility(View.GONE)
+            view?.setViewStateMsgVisibility(View.GONE)
+
+            when (states) {
+                ViewStates.LOADING -> {
+                    view?.setLoadingVisibility(View.VISIBLE)
+                }
+                ViewStates.SUCCESS -> {
+                    view?.setRecyclerViewVisibility(View.VISIBLE)
+                    view?.setMovieList(mMovieList)
+                }
+                ViewStates.ERROR -> {
+                    view?.setViewStateMsgVisibility(View.VISIBLE)
+                    view?.setViewStateMsg(activity.getString(R.string.msg_net_error))
+                }
+                ViewStates.EMPTY -> {
+                    view?.setViewStateMsg(activity.getString(R.string.msg_data_empty))
+                }
+            }
+        }
+    }
+
+    /**
+     *  取得影片列表，包含網路與本地端 */
+    private fun getMovieList() {
+        view?.getFragmentActivity()?.let { activity ->
+            KLog.i(TAG, "getMovieList")
+            setViewStatus(ViewStates.LOADING)
             val movieSubscribe = createMovieSubscribe()
             mChocoInteractor.getMovies(activity)
                 .compose(SwitchSchedulers.applyFlowableSchedulers())
+                .switchIfEmpty {
+                    mMovieList = listOf()
+                    setViewStatus(ViewStates.EMPTY)
+                }
                 .subscribe(movieSubscribe)
         }
 
@@ -65,15 +75,25 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
         return object : RxSubscriber<List<MovieBean>>() {
             override fun _onNext(alMovie: List<MovieBean>) {
                 KLog.i(TAG, alMovie.toString())
-                mAlMovie = alMovie
-                view?.setMovieList(mAlMovie)
+                mMovieList = alMovie
+                setViewStatus(ViewStates.SUCCESS)
             }
 
             override fun _onError(code: Int, msg: String?) {
                 KLog.e(TAG, msg)
-                setViewStatus(ViewStatus.ERROR)
+                setViewStatus(ViewStates.ERROR)
             }
         }
     }
 
+    override fun onSearchConfirmClick(key: String) {
+        KLog.i(TAG, "onSearchOnConfirmClick: $key")
+        view?.getFragmentActivity()?.let { activity ->
+            setViewStatus(ViewStates.LOADING)
+            val movieSubscribe = createMovieSubscribe()
+            mChocoInteractor.searchMovies(activity, key)
+                .compose(SwitchSchedulers.applyFlowableSchedulers())
+                .subscribe(movieSubscribe)
+        }
+    }
 }

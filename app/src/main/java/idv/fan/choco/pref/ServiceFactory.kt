@@ -1,15 +1,12 @@
-package idv.fan.choco.db.pref
+package idv.fan.choco.pref
 
-/**
- * Created by Warren on 2016/12/28.
- */
 object ServiceFactory {
     private var sharedPreferencesService: SharedPreferencesService? = null
 
-    fun getSharedPreferencesService(): SharedPreferencesService? {
+    fun getSharedPreferencesService(): SharedPreferencesService {
         if (sharedPreferencesService == null) {
             sharedPreferencesService = SharedPreferencesService()
         }
-        return sharedPreferencesService
+        return sharedPreferencesService!!
     }
 }

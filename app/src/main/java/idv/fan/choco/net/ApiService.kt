@@ -1,8 +1,7 @@
-package idv.fan.cathaybk.net
+package idv.fan.choco.net
 
 import android.util.Log
 import com.google.gson.GsonBuilder
-import com.socks.library.KLog
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -13,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 class ApiService private constructor() {
 
@@ -34,8 +34,12 @@ class ApiService private constructor() {
             .addInterceptor(UnzippingInterceptor())
             .build()
 
+        val gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.XXXZ")
+            .create()
+
         retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(BASE_URL)
             .client(client)
@@ -49,13 +53,12 @@ class ApiService private constructor() {
 
     class UnzippingInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
-            val response = chain!!.proceed(chain.request())
+            val response = chain.proceed(chain.request())
             return unzip(response)
         }
 
         @Throws(IOException::class)
         private fun unzip(response: Response): Response {
-
             val respBody = response.body ?: return response
             try {
                 val json = JSONObject(respBody.string())

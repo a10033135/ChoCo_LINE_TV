@@ -8,5 +8,5 @@ import retrofit2.http.GET
 interface ChocoInterface {
 
     @GET("dramas-sample.json")
-    fun getMovies(): Flowable<List<MovieBean>>
+    fun getMoviesNetwork(): Flowable<List<MovieBean>>
 }

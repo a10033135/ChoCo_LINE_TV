@@ -1,4 +1,4 @@
-package idv.fan.cathaybk.ui.base
+package idv.fan.choco.ui.base
 
 import androidx.fragment.app.FragmentActivity
 

@@ -12,6 +12,7 @@ interface MovieListContract {
         fun setRecyclerViewVisibility(visibility: Int)
         fun setLoadingVisibility(visibility: Int)
         fun setViewStateMsg(msg: String)
+        fun setSearchBarRequest()
     }
 
     interface Presenter : BaseContract.Presenter<View> {

@@ -43,6 +43,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
                     view?.setSearchViewVisibility(View.VISIBLE)
                     view?.setRecyclerViewVisibility(View.VISIBLE)
                     view?.setMovieList(mMovieList)
+                    view?.setSearchBarRequest() // 搜尋完將專注回到 edittext 上
                 }
                 ViewStates.ERROR -> {
                     view?.setViewStateMsgVisibility(View.VISIBLE)

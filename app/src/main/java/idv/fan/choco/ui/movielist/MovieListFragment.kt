@@ -100,6 +100,11 @@ class MovieListFragment : BaseFragment<MovieListContract.View, MovieListContract
         tv_state_msg?.text = msg
     }
 
+    override fun setSearchBarRequest() {
+        KLog.i(getTAG(), "searchRequest")
+        et_search?.requestFocus()
+    }
+
     override fun onItemClick(dramaId: Int) {
         KLog.i(getTAG(), "onItemClick: $dramaId")
         val movieDetailFragment = MovieDetailFragment()
